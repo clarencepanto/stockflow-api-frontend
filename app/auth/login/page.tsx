@@ -12,16 +12,33 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck, UserCircle } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoggingIn } = useAuth();
 
-  const handleLogin = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     login({ email, password });
+  };
+
+  // Quick demo login functions
+  const handleDemoAdminLogin = () => {
+    login({
+      email: "admin@test.com",
+      password: "admin123",
+    });
+  };
+
+  const handleDemoStaffLogin = () => {
+    login({
+      email: "staff@test.com",
+      password: "staff123",
+    });
   };
 
   return (
@@ -36,7 +53,48 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          {/* Quick Demo Access Buttons */}
+          <div className="space-y-3 mb-6">
+            <p className="text-sm text-center text-muted-foreground font-medium">
+              Quick Demo Access
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleDemoAdminLogin}
+                disabled={isLoggingIn}
+              >
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                Admin Demo
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleDemoStaffLogin}
+                disabled={isLoggingIn}
+              >
+                <UserCircle className="mr-2 h-4 w-4" />
+                Staff Demo
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <Separator />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with credentials
+              </span>
+            </div>
+          </div>
+
+          {/* Regular Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -45,12 +103,8 @@ export default function LoginPage() {
                 placeholder="admin@test.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
                 disabled={isLoggingIn}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleLogin();
-                  }
-                }}
               />
             </div>
 
@@ -62,21 +116,12 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
                 disabled={isLoggingIn}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleLogin();
-                  }
-                }}
               />
             </div>
 
-            <Button
-              type="button"
-              onClick={handleLogin}
-              className="w-full"
-              disabled={isLoggingIn}
-            >
+            <Button type="submit" className="w-full" disabled={isLoggingIn}>
               {isLoggingIn ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -86,15 +131,15 @@ export default function LoginPage() {
                 "Login"
               )}
             </Button>
-          </div>
+          </form>
 
           <div className="mt-4 text-center text-sm">
             Don't have an account?{" "}
             <Link
               href="/auth/register"
-              className="text-primary hover:underline"
+              className="text-primary hover:underline font-medium"
             >
-              Register
+              Sign up
             </Link>
           </div>
         </CardContent>

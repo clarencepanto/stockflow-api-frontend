@@ -21,17 +21,32 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<"ADMIN" | "STAFF">("STAFF");
   const { register, isRegistering } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    register({ email, password, name, role });
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
+    register({ name, email, password, role });
   };
 
   return (
@@ -39,16 +54,16 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
-            Create Account
+            Create an Account
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your information to create a StockFlow account
+            Sign up to start using StockFlow
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 type="text"
@@ -86,8 +101,22 @@ export default function RegisterPage() {
                 disabled={isRegistering}
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 6 characters
+                Must be at least 6 characters long
               </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={6}
+                disabled={isRegistering}
+              />
             </div>
 
             <div className="space-y-2">
@@ -120,7 +149,10 @@ export default function RegisterPage() {
 
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-primary hover:underline">
+            <Link
+              href="/auth/login"
+              className="text-primary hover:underline font-medium"
+            >
               Login
             </Link>
           </div>
