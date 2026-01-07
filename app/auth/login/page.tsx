@@ -29,15 +29,15 @@ export default function LoginPage() {
   // Quick demo login functions
   const handleDemoAdminLogin = () => {
     login({
-      email: "admin@test.com",
-      password: "admin123",
+      email: "admin@test.co",
+      password: "123456",
     });
   };
 
   const handleDemoStaffLogin = () => {
     login({
-      email: "staff@test.com",
-      password: "staff123",
+      email: "staff@test.ca",
+      password: "123456",
     });
   };
 
