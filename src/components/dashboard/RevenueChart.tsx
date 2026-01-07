@@ -32,7 +32,10 @@ export function RevenueChart({ data }: RevenueChartProps) {
           tickFormatter={(value) => `$${value}`}
         />
         <Tooltip
-          formatter={(value: number) => [`$${value.toFixed(2)}`, "Revenue"]}
+          formatter={(value: number | undefined) => [
+            `$${(value ?? 0).toFixed(2)}`,
+            "Revenue",
+          ]}
           contentStyle={{
             backgroundColor: "#fff",
             border: "1px solid #e2e8f0",

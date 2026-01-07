@@ -48,7 +48,7 @@ export function OrderStatusChart({ data }: OrderStatusChartProps) {
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) => [value, "Orders"]}
+          formatter={(value: number | undefined) => [value ?? 0, "Orders"]}
           contentStyle={{
             backgroundColor: "#fff",
             border: "1px solid #e2e8f0",

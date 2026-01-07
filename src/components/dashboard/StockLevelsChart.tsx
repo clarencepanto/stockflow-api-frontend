@@ -30,7 +30,10 @@ export function StockLevelsChart({ data }: StockLevelsChartProps) {
         />
         <YAxis stroke="#64748b" fontSize={12} />
         <Tooltip
-          formatter={(value: number, name: string) => [value, "Stock Level"]}
+          formatter={(value: number | undefined, name: string | undefined) => [
+            value ?? 0,
+            "Stock Level",
+          ]}
           contentStyle={{
             backgroundColor: "#fff",
             border: "1px solid #e2e8f0",
